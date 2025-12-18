@@ -29,69 +29,6 @@ if ($inquiry === '') $errors[] = "お問い合わせ内容が入力されてい�
     <!-- ページタイトル（確認画面） -->
     <title>お問い合わせフォーム - 確認画面</title>
     <link rel="stylesheet" href="style.css">
-
-    <style>
-        /* サイドバーのデザイン */
-        .sidebar {
-            width: 200px;
-            float: left;
-        }
-
-        /* メインコンテンツ部分 */
-        .content {
-            margin-left: 220px;
-        }
-
-        /* 5 × 2 の表の基本デザイン */
-        table {
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        /* 表の枠線（太さ 3px） */
-        table, th, td {
-            border: 3px solid #000;
-            padding: 10px;
-        }
-
-        footer {
-            margin-top: 40px;
-            padding: 20px;
-            background: lightgray;
-            text-align: center;
-        }
-
-        /* footer 内ボタン */
-        #changeColorBtn {
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-
-        .error {
-            color: red;
-            font-weight: bold;
-        }
-    </style>
-
-    <script>
-        // -------------------------------------------------------
-        // footer の背景色を青 → 赤 → 黄色 → 灰色 → 青…と循環させる処理
-        // -------------------------------------------------------
-
-        let colors = ["blue", "red", "yellow", "gray"]; // 変化させる色の配列
-        let index = 0; // 現在の色の位置
-
-        function changeFooterColor() {
-            const footer = document.getElementById("footer");
-
-            // 背景色を設定
-            footer.style.backgroundColor = colors[index];
-
-            // 次の色へ進める
-            index = (index + 1) % colors.length;
-        }
-    </script>
 </head>
 
 <body>
@@ -161,11 +98,10 @@ if ($inquiry === '') $errors[] = "お問い合わせ内容が入力されてい�
                --------------------------------------------------- -->
              <input type="hidden" name="from_confirm" value="1">
     <input type="hidden" name="name" value="<?php echo htmlspecialchars($name, ENT_QUOTES, 'UTF-8'); ?>">
-    <input type="hidden" name="companyname" value="<?php echo htmlspecialchars($companyname, ENT_QUOTES, 'UTF-8'); ?>">
+    <input type="hidden" name="company" value="<?php echo htmlspecialchars($company, ENT_QUOTES, 'UTF-8'); ?>">
     <input type="hidden" name="email" value="<?php echo htmlspecialchars($email, ENT_QUOTES, 'UTF-8'); ?>">
     <input type="hidden" name="age" value="<?php echo htmlspecialchars($age, ENT_QUOTES, 'UTF-8'); ?>">
-    <input type="hidden" name="message" value="<?php echo htmlspecialchars($message, ENT_QUOTES, 'UTF-8'); ?>">
-    <button type="submit">戻る</button>
+    <input type="hidden" name="inquiry" value="<?php echo htmlspecialchars($inquiry, ENT_QUOTES, 'UTF-8'); ?>">
 
             <br><br>
 
@@ -184,6 +120,6 @@ if ($inquiry === '') $errors[] = "お問い合わせ内容が入力されてい�
     <footer id="footer">
         <button id="changeColorBtn" onclick="changeFooterColor()">押してみてね！</button>
     </footer>
-
+    <script src="style.js"></script>
 </body>
 </html>

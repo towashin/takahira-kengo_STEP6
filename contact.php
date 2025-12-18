@@ -17,16 +17,13 @@ $errors = [];
 // -------------------------------
 // POSTで送信されたときのみ処理
 // -------------------------------
-if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["from_confirm"])) {
-    $name        = $_POST["name"] ?? "";
-    $companyname = $_POST["companyname"] ?? "";
-    $email       = $_POST["email"] ?? "";
-    $age         = $_POST["age"] ?? "";
-    $message     = $_POST["message"] ?? "";
-} else {
-    // 初回アクセスの場合は必ず空にする
-    $name = $companyname = $email = $age = $message = "";
-}
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+
+    $name    = $_POST["name"] ?? "";
+    $company = $_POST["company"] ?? "";
+    $email   = $_POST["email"] ?? "";
+    $age     = $_POST["age"] ?? "";
+    $message = $_POST["message"] ?? "";
 
     // ▼ 必須項目チェック
     if ($name === '') {
@@ -43,20 +40,24 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["from_confirm"])) {
     if (empty($errors)) {
         ?>
         <form id="confirmForm" action="confirm.php" method="post">
-            <input type="hidden" name="name" value="<?php echo htmlspecialchars($name, ENT_QUOTES, 'UTF-8'); ?>">
-            <input type="hidden" name="company" value="<?php echo htmlspecialchars($company, ENT_QUOTES, 'UTF-8'); ?>">
-            <input type="hidden" name="email" value="<?php echo htmlspecialchars($email, ENT_QUOTES, 'UTF-8'); ?>">
-            <input type="hidden" name="age" value="<?php echo htmlspecialchars($age, ENT_QUOTES, 'UTF-8'); ?>">
-            <input type="hidden" name="inquiry" value="<?php echo htmlspecialchars($message, ENT_QUOTES, 'UTF-8'); ?>">
+            <input type="hidden" name="name" value="<?= htmlspecialchars($name, ENT_QUOTES, 'UTF-8') ?>">
+            <input type="hidden" name="company" value="<?= htmlspecialchars($company, ENT_QUOTES, 'UTF-8') ?>">
+            <input type="hidden" name="email" value="<?= htmlspecialchars($email, ENT_QUOTES, 'UTF-8') ?>">
+            <input type="hidden" name="age" value="<?= htmlspecialchars($age, ENT_QUOTES, 'UTF-8') ?>">
+            <input type="hidden" name="inquiry" value="<?= htmlspecialchars($message, ENT_QUOTES, 'UTF-8') ?>">
         </form>
         <script>
-            // confirm.php に自動転送
             document.getElementById("confirmForm").submit();
         </script>
         <?php
         exit();
     }
+
+} else {
+    // 初回アクセス
+    $name = $company = $email = $age = $message = "";
 }
+
 ?>
 <!DOCTYPE html>
 <html lang="ja">
@@ -64,145 +65,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["from_confirm"])) {
     <meta charset="UTF-8">
     <title>お問い合わせフォーム</title>
     <link rel="stylesheet" href="style.css">
-
-    <style>
-        /* ==============================
-           ページ全体のレイアウト設定
-           ============================== */
-        body {
-            font-family: "Helvetica Neue", Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: grid;
-            grid-template-columns: 200px 1fr;
-            grid-template-rows: auto 1fr auto;
-            grid-template-areas:
-                "header header"
-                "sidebar main"
-                "footer footer";
-            min-height: 100vh;
-        }
-
-        /* ==============================
-           エラー表示
-           ============================== */
-        .error {
-            color: red;
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
-
-        /* ==============================
-           ヘッダー部分
-           ============================== */
-        header {
-            grid-area: header;
-            background-color: #f8f9fa;
-            text-align: center;
-            padding: 15px 0;
-            border-bottom: 2px solid #ccc;
-        }
-
-        /* ==============================
-           サイドバー部分
-           ============================== */
-        sidebar {
-            grid-area: sidebar;
-            background-color: #f0f0f0;
-            padding: 20px;
-            border-right: 2px solid #ccc;
-        }
-
-        sidebar ul {
-            list-style-type: none;
-            padding: 0;
-        }
-
-        sidebar ul li {
-            margin-bottom: 15px;
-        }
-
-        sidebar ul li a {
-            text-decoration: none;
-            color: #007BFF;
-        }
-
-        /* ==============================
-           メイン（フォーム部分）
-           ============================== */
-        main {
-            grid-area: main;
-            padding: 20px;
-        }
-
-        table {
-            border-collapse: collapse;
-            width: 100%;
-            max-width: 600px;
-            border: 3px solid #333;
-        }
-
-        th, td {
-            border: 3px solid #333;
-            padding: 10px;
-            vertical-align: middle;
-        }
-
-        td:first-child {
-            width: 150px;
-            background-color: #f7f7f7;
-            font-weight: bold;
-        }
-
-        input[type="text"],
-        input[type="email"],
-        input[type="number"],
-        textarea {
-            width: 95%;
-            padding: 8px;
-            box-sizing: border-box;
-        }
-
-        textarea::placeholder {
-            color: #999;
-        }
-
-        input[type="submit"] {
-            margin-top: 15px;
-            padding: 8px 16px;
-            font-size: 14px;
-            cursor: pointer;
-            background-color: #007BFF;
-            color: white;
-            border: none;
-            border-radius: 4px;
-        }
-
-        /* ==============================
-           フッター部分
-           ============================== */
-        footer {
-            grid-area: footer;
-            text-align: center;
-            padding: 20px;
-            background-color: #ddd;
-            border-top: 2px solid #ccc;
-            transition: background-color 0.3s ease;
-        }
-
-        footer button {
-            background-color: #ff9800;
-            border: none;
-            padding: 10px 20px;
-            color: white;
-            font-size: 16px;
-            border-radius: 6px;
-            cursor: pointer;
-        }
-    </style>
 </head>
-<body>
-
 <body class="contact">
 
     <!-- ==============================
@@ -215,7 +78,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["from_confirm"])) {
     <!-- ==============================
          サイドバー
          ============================== -->
-    <sidebar>
+    <div class="sidebar">
         <ul>
             <li><a href="index.php">トップページ</a></li>
             <li><a href="popular.php">人気投稿</a></li>
@@ -223,7 +86,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["from_confirm"])) {
             <li><a href="articles.php">エンジニアおすすめ記事</a></li>
             <li><a href="post.php">投稿ページ</a></li>
         </ul>
-    </sidebar>
+    </div>
 
     <!-- ==============================
          メインコンテンツ
@@ -270,28 +133,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["from_confirm"])) {
         </form>
 
     </main>
-
-    <!-- ==============================
-         フッター（背景色が変わるボタン付き）
-         ============================== -->
+    <!-- footer（背景色が変わる） -->
     <footer>
         <button id="footerBtn">押してみてね！</button>
     </footer>
-
-    <script>
-        /* ==============================
-           JavaScript: フッター背景色変更処理
-           ============================== */
-        const footer = document.querySelector("footer");
-        const colors = ["blue", "red", "yellow", "gray"];
-        let colorIndex = 0;
-
-        document.getElementById("footerBtn").addEventListener("click", function() {
-            footer.style.backgroundColor = colors[colorIndex];
-            colorIndex = (colorIndex + 1) % colors.length;
-        });
-    </script>
-
+    <script src="style.js"></script>
 </body>
 </html>
 

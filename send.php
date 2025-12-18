@@ -12,12 +12,15 @@ $inquiry = $_POST['inquiry'] ?? '';
 // ------------------------------------------------------------
 // 入力チェック（confirm.php を通らず直接アクセスした場合の保護）
 // ------------------------------------------------------------
-if ($name === '' && $email === '' && $inquiry === '') {
-    echo "不正なアクセスです。<br>";
-    echo '<a href="contact.php">お問い合わせフォームに戻る</a>';
+if (
+    $_SERVER["REQUEST_METHOD"] !== "POST" ||
+    empty($_POST['name']) ||
+    empty($_POST['email']) ||
+    empty($_POST['inquiry'])
+) {
+    header("Location: contact.php");
     exit;
 }
-
 
 // ------------------------------------------------------------
 // メール送信処理（必要に応じて編集）
@@ -34,7 +37,8 @@ $body .= "年齢: {$age}\n";
 $body .= "お問い合わせ内容:\n{$inquiry}\n";
 $body .= "--------------------------\n";
 
-$headers = "From: " . $email;
+$email = str_replace(["\r", "\n"], '', $email);
+$headers = "From: {$email}";
 
 $mailResult = mb_send_mail($to, $subject, $body, $headers);
 
@@ -45,76 +49,12 @@ $mailResult = mb_send_mail($to, $subject, $body, $headers);
     <meta charset="UTF-8">
     <title>お問い合わせ送信完了</title>
     <link rel="stylesheet" href="style.css">
-
-    <style>
-        /* サイドバーのデザイン */
-        .sidebar {
-            width: 200px;
-            float: left;
-        }
-
-        /* メインコンテンツ部分 */
-        .content {
-            margin-left: 220px;
-        }
-
-        /* 表の基本デザイン */
-        table {
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        /* 表の枠線（太さ 3px） */
-        table, th, td {
-            border: 3px solid #000;
-            padding: 10px;
-        }
-
-        footer {
-            margin-top: 40px;
-            padding: 20px;
-            background: lightgray;
-            text-align: center;
-        }
-
-        /* footer 内ボタン */
-        #changeColorBtn {
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-
-        /* メッセージボックス */
-        .message-box {
-            border: 3px solid #000;
-            padding: 30px;
-            width: 500px;
-            margin-top: 30px;
-            border-radius: 10px;
-        }
-    </style>
-
-    <script>
-        // -------------------------------------------------------
-        // footer の背景色を青 → 赤 → 黄色 → 灰色 → 青…と循環させる処理
-        // -------------------------------------------------------
-
-        let colors = ["blue", "red", "yellow", "gray"];
-        let index = 0;
-
-        function changeFooterColor() {
-            const footer = document.getElementById("footer");
-            footer.style.backgroundColor = colors[index];
-            index = (index + 1) % colors.length;
-        }
-    </script>
-
 </head>
 <body>
 
     <!-- header 表示部分 -->
     <header>
-        <h2>お問い合わせフォーム</h2>
+        <h1>お問い合わせフォーム-送信完了画面</h1>
     </header>
 
     <!-- サイドバー（リンク付き箇条書き） -->
@@ -129,9 +69,9 @@ $mailResult = mb_send_mail($to, $subject, $body, $headers);
     </div>
 
     <!-- メインコンテンツ -->
-    <div class="content">
+    <main>
 
-        <h3>送信完了</h3>
+        <h1>送信完了</h1>
 
         <div class="message-box">
             <?php if ($mailResult): ?>
@@ -142,15 +82,16 @@ $mailResult = mb_send_mail($to, $subject, $body, $headers);
         </div>
 
         <br>
-        <a href="index.php">トップへ戻る</a>
+        <a href="contact.php">お問い合わせフォームに戻る</a>
 
-    </div>
+    </main>
 
     <!-- footer（背景色が変わる） -->
-    <footer id="footer">
-        <button id="changeColorBtn" onclick="changeFooterColor()">押してみてね！</button>
+    <footer>
+    <button id="footerBtn">押してみてね！</button>
     </footer>
 
+    <script src="style.js"></script>            
 </body>
 </html>
 

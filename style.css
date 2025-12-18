@@ -1,18 +1,22 @@
 /* ===================================================================
-   共通レイアウト設定（contact / confirm / send すべてに適用）
+   共通レイアウト設定（contact / confirm / send）
    =================================================================== */
 
-/* ページ全体のレイアウト */
-body {
+/* --------------------------------------------------------------
+   ベース設定
+   -------------------------------------------------------------- */
+   body {
     font-family: "Helvetica Neue", Arial, sans-serif;
     margin: 0;
     padding: 0;
 }
 
 /* --------------------------------------------------------------
-   contact.php（グリッドレイアウト）用
+   全ページ共通 Grid レイアウト
    -------------------------------------------------------------- */
-body.contact {
+body.contact,
+body.confirm,
+body.send {
     display: grid;
     grid-template-columns: 200px 1fr;
     grid-template-rows: auto 1fr auto;
@@ -21,21 +25,6 @@ body.contact {
         "sidebar main"
         "footer footer";
     min-height: 100vh;
-}
-
-/* --------------------------------------------------------------
-   confirm.php / send.php（floatレイアウト）用
-   -------------------------------------------------------------- */
-.sidebar {
-    width: 200px;
-    float: left;
-    background-color: #f0f0f0;
-    padding: 20px;
-}
-
-.content {
-    margin-left: 220px;
-    padding: 20px;
 }
 
 /* ==============================================================
@@ -50,25 +39,26 @@ header {
 }
 
 /* ==============================================================
-   サイドバー (共通)
+   サイドバー（共通）
+   HTML: <div class="sidebar">
    ============================================================== */
-sidebar, .sidebar {
+.sidebar {
+    grid-area: sidebar;
     background-color: #f0f0f0;
     padding: 20px;
     border-right: 2px solid #ccc;
 }
 
-sidebar ul, .sidebar ul {
-    list-style-type: none;
+.sidebar ul {
+    list-style: none;
     padding: 0;
+    margin: 0;
 }
 
-sidebar ul li,
 .sidebar ul li {
     margin-bottom: 15px;
 }
 
-sidebar ul li a,
 .sidebar ul li a {
     text-decoration: none;
     color: #007BFF;
@@ -83,7 +73,7 @@ main {
 }
 
 /* ==============================================================
-   テーブル共通デザイン（contact / confirm / send）
+   テーブル共通デザイン
    ============================================================== */
 table {
     border-collapse: collapse;
@@ -92,7 +82,9 @@ table {
     margin-top: 20px;
 }
 
-table, th, td {
+table,
+th,
+td {
     border: 3px solid #333;
     padding: 10px;
     vertical-align: middle;
@@ -105,15 +97,16 @@ td:first-child {
 }
 
 /* ==============================================================
-   入力フォーム要素（contact.php 用）
+   入力フォーム要素（contact.php）
    ============================================================== */
 input[type="text"],
 input[type="email"],
 input[type="number"],
 textarea {
-    width: 95%;
+    font-size: 16px;
     padding: 8px;
     box-sizing: border-box;
+    width: 100%;
 }
 
 textarea::placeholder {
@@ -128,7 +121,7 @@ button {
     font-size: 14px;
     cursor: pointer;
     background-color: #007BFF;
-    color: white;
+    color: #fff;
     border: none;
     border-radius: 4px;
 }
@@ -136,7 +129,8 @@ button {
 /* ==============================================================
    エラー表示
    ============================================================== */
-.error {
+.error,
+.js-error-box {
     color: red;
     font-weight: bold;
     margin-bottom: 20px;
@@ -149,6 +143,7 @@ button {
     border: 3px solid #000;
     padding: 30px;
     width: 500px;
+    max-width: 100%;
     margin-top: 30px;
     border-radius: 10px;
     background-color: #fff;
@@ -159,7 +154,6 @@ button {
    ============================================================== */
 footer {
     grid-area: footer;
-    margin-top: 40px;
     padding: 20px;
     background-color: #ddd;
     border-top: 2px solid #ccc;
@@ -167,12 +161,12 @@ footer {
     transition: background-color 0.3s ease;
 }
 
-footer button,
-#changeColorBtn {
+/* フッター内ボタン（JSとID統一） */
+#footerBtn {
     background-color: #ff9800;
     border: none;
     padding: 10px 20px;
-    color: white;
+    color: #fff;
     font-size: 16px;
     border-radius: 6px;
     cursor: pointer;
